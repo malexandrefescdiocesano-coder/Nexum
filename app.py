@@ -72,8 +72,6 @@ if user_input := st.chat_input("Digite sua mensagem..."):
                         )
                     )
                 
-                # Força formatação de código no último prompt de forma segura
-                instrucao_codigo = (
                                     # Instrução do sistema atualizada para remover a "palestrinha" de robô
                 instrucao_codigo = (
                     "\n[SISTEMA: Responda de forma direta, natural e amigável. "
