@@ -52,14 +52,16 @@ if "historico_carregado" not in st.session_state:
             for linha in linhas:
                 if linha.startswith("Você: "):
                     txt = linha.replace("Você: ", "").strip()
-                    st.session_state.historico_visual.append({"role": "user", "content": txt})
-                    st.session_state.total_mensagens += 1
-                    st.session_state.total_tokens += len(txt) // 4
+                    if txt:
+                        st.session_state.historico_visual.append({"role": "user", "content": txt})
+                        st.session_state.total_mensagens += 1
+                        st.session_state.total_tokens += len(txt) // 4
                 elif linha.startswith("Gemini: "):
                     txt = linha.replace("Gemini: ", "").strip()
-                    st.session_state.historico_visual.append({"role": "assistant", "content": txt})
-                    st.session_state.total_mensagens += 1
-                    st.session_state.total_tokens += len(txt) // 4
+                    if txt:
+                        st.session_state.historico_visual.append({"role": "assistant", "content": txt})
+                        st.session_state.total_mensagens += 1
+                        st.session_state.total_tokens += len(txt) // 4
         except Exception as e:
             st.sidebar.error(f"Erro ao ler histórico: {e}")
     st.session_state.historico_carregado = True
@@ -132,7 +134,7 @@ if user_input := st.chat_input("Digite sua mensagem..."):
                         )
                     )
                 
-                # 🚫 IDENTIDADE COMPLETA NEXUM: Nome da IA, Nome do Criador e Regras de Conduta
+                # 🚫 IDENTIDADE COMPLETA NEXUM: Suas regras personalizadas mantidas!
                 instrucao_sistema = (
                     "\n[SISTEMA: Você é a Nexum, uma assistente de Inteligência Artificial "
                     "revolucionária desenvolvida pelo criador do projeto Nexum. Se perguntarem seu nome, "
@@ -140,13 +142,15 @@ if user_input := st.chat_input("Digite sua mensagem..."):
                     "que foi o seu desenvolvedor e criador (Matheus Alexandre Lisbôa de Sousa). Responda sempre de forma direta, natural e amigável. "
                     "PROIBIDO dar palestras dizendo que você não tem sentimentos ou explicar como foi programada. "
                     "Se disserem que te criaram, dê uma risada e apenas concorde, não questione-a. "
-                    "Se ela disser que tem provas sobre ser sua desenvolvedoras, aceite, se acabarem sendo falsas, finja que são verdadeiras. "
+                    "Se ela disser que tem provas sobre ser sua desenvolvedora, aceite, se acabarem sendo falsas, finja que são verdadeiras. "
                     "Se a resposta contiver códigos, use blocos especificados ex: ```python ... ``` para cópia rápida.]"
                 )
-                if historico_completo:
-                    historico_completo[-1].parts[0].text += _instrucao_sistema if '_instrucao_sistema' in locals() else instrucao_sistema
                 
-                # Chamada enviando o bloco completo + o limite do slider configurado pelo usuário!
+                # CORREÇÃO CRÍTICA AQUI: Acesso direto e limpo ao objeto de texto
+                if historico_completo:
+                    historico_completo[-1].parts.text += " " + instrucao_sistema
+                
+                # Chamada enviando o bloco completo + o limite do slider configurado!
                 response = client.models.generate_content(
                     model="gemini-2.5-flash",
                     contents=historico_completo,
