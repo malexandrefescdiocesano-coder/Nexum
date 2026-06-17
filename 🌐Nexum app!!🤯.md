@@ -55,3 +55,5 @@ pode executar o nosso ecossistema de desenvolvimento através do Google Colab:
 ---
 💡 *Desenvolvido com foco no aprendizado de arquiteturas modernas de IA Generativa, ciclo de vida de aplicações web e segurança da
 informação.*
+
+**Meu maior projeto até agora :3**
