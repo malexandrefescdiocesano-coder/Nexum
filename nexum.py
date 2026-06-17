@@ -56,7 +56,7 @@ if "historico_carregado" not in st.session_state:
                     st.session_state.total_mensagens += 1
                     st.session_state.total_tokens += len(txt) // 4
                 elif linha.startswith("Gemini: "):
-                    txt = linha.replace("Gemini: ", "").strip()
+                    txt = inline.replace("Gemini: ", "").strip()
                     st.session_state.historico_visual.append({"role": "assistant", "content": txt})
                     st.session_state.total_mensagens += 1
                     st.session_state.total_tokens += len(txt) // 4
@@ -64,13 +64,23 @@ if "historico_carregado" not in st.session_state:
             st.sidebar.error(f"Erro ao ler histórico: {e}")
     st.session_state.historico_carregado = True
 
-# 5. Barra Lateral com Estatísticas Dinâmicas e Opções Isoladas
+# 5. Barra Lateral com Estatísticas Dinâmicas e Configurações
 with st.sidebar:
     st.header("📊 Estatísticas do Chat")
     st.metric(label="Mensagens Trocadas", value=st.session_state.total_mensagens)
     st.metric(label="Tokens Estimados", value=st.session_state.total_tokens, help="1 token equivale a cerca de 4 caracteres.")
     
-    st.header("⚙️ Opções")
+    # 🎛️ RETORNO DO SLIDER: Controle de tamanho de resposta reativado!
+    st.header("⚙️ Ajustes da IA")
+    max_tokens_usuario = st.sidebar.slider(
+        "Tamanho máximo da resposta (Tokens):", 
+        min_value=50, 
+        max_value=1500, 
+        value=300,
+        help="Valores maiores permitem respostas mais longas, mas consomem mais da cota por minuto."
+    )
+    
+    st.header("💾 Opções de Sessão")
     if st.button("💾 Salvar Minha Conversa"):
         try:
             texto_final = ""
@@ -122,23 +132,25 @@ if user_input := st.chat_input("Digite sua mensagem..."):
                         )
                     )
                 
-                                # 🚫 IDENTIDADE COMPLETA NEXUM: Nome da IA e Nome do Criador!
+                # 🚫 IDENTIDADE COMPLETA NEXUM: Nome da IA, Nome do Criador e Regras de Conduta
                 instrucao_sistema = (
                     "\n[SISTEMA: Você é a Nexum, uma assistente de Inteligência Artificial "
-                    "revolucionária. Se perguntarem seu nome, diga que é a Nexum. Se perguntarem quem te criou, "
-                    "responda com muito orgulho que você foi desenvolvida e programada pelo seu criador (Matheus Alexandre Lisbôa de Sousa)! "
-                    "Responda sempre de forma direta, natural e amigável. PROIBIDO dar palestras robóticas sobre não ter "
-                    "sentimentos ou explicar algoritmos. Se houver códigos, use blocos especificados ex: ```python ... ```]"
+                    "revolucionária desenvolvida pelo criador do projeto Nexum. Se perguntarem seu nome, "
+                    "diga orgulhosamente que você é a Nexum. Se perguntarem quem te criou, diga com carinho "
+                    "que foi o seu desenvolvedor e criador. Responda sempre de forma direta, natural e amigável. "
+                    "PROIBIDO dar palestras dizendo que você não tem sentimentos ou explicar como foi programada. "
+                    "Se a resposta contiver códigos, use blocos especificados ex: ```python ... ``` para cópia rápida.]"
                 )
-
-                
                 if historico_completo:
-                    historico_completo[-1].parts[0].text += instrucao_sistema
+                    historico_completo[-1].parts[0].text += _instrucao_sistema if '_instrucao_sistema' in locals() else instrucao_sistema
                 
-                # Chamada enviando o bloco completo com todo o contexto guardado
+                # Chamada enviando o bloco completo + o limite do slider configurado pelo usuário!
                 response = client.models.generate_content(
                     model="gemini-2.5-flash",
-                    contents=historico_completo
+                    contents=historico_completo,
+                    config=types.GenerateContentConfig(
+                        max_output_tokens=max_tokens_usuario
+                    )
                 )
                 
                 st.markdown(response.text)
