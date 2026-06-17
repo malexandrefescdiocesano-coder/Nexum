@@ -40,7 +40,7 @@ pode executar o nosso ecossistema de desenvolvimento através do Google Colab:
 1. Ative o ambiente de execução **GPU T4** no menu do Colab.
 2. Instale os drivers de compressão de 4-bits:
    ```bash
-   pip install transformers accelerate bitsandbytes ipywidgets
+   !pip install transformers accelerate bitsandbytes ipywidgets
    ```
 3. Execute a interface interativa em Python carregando o modelo `microsoft/Phi-3-mini-4k-instruct`.
 
