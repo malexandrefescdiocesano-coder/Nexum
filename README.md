@@ -43,10 +43,10 @@ isolamento de dados para múltiplos usuários simultâneos.
 
 ## 💻 Como Rodar o Nexum Localmente (Modo Turbo GPU)
 
-Se você deseja rodar o motor do Nexum de forma 100% gratuita, local e offline usando aceleração por placa de vídeo (GPU T4), você
+Se você deseja rodar o **motor** do Nexum de forma 100% gratuita, local e offline usando aceleração por placa de vídeo (GPU T4), você
 pode executar o nosso ecossistema de desenvolvimento através do Google Colab:
 
-1. Ative o ambiente de execução **GPU T4** no menu do Colab.
+1. Ative o ambiente de execução **GPU T4** no menu do **Google Colab**.
 2. Instale os drivers de compressão de 4-bits:
    ```bash
    !pip install transformers accelerate bitsandbytes ipywidgets
