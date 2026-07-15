@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fe76e7d7-e13b-4977-8a79-7c6781c20386" alt="Nexum Logo" width="300">
+  <img src="https://github.com/user-attachments/assets/fe76e7d7-e13b-4977-8a79-7c6781c20386" alt="Nexum Logo" width="500">
 </p>
 
 
