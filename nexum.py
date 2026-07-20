@@ -133,7 +133,7 @@ if user_input := st.chat_input("Digite sua mensagem..."):
                     )
                 
                                
-                instrucao_sistema = st.secrets["MINHA_API_KEY"]
+                instrucao_sistema = st.secrets["INSTRUCAO SECRETA"]
                 
                  
                 response = client.models.generate_content(
